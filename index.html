@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Açaíteria Delícia</title>
+    <style>
+        :root {
+            --primary: #8A2BE2;
+            --secondary: #4B0082;
+            --accent: #FF69B4;
+            --light: #F8F9FA;
+            --dark: #343A40;
+            --success: #25D366;
+            --warning: #FFC107;
+            --danger: #DC3545;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        /* Header Responsivo */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .logo-section {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .logo {
+            width: 80px;
+            height: 80px;
+            background-color: white;
+            border-radius: 50%;
+            margin: 0 auto 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 5px;
+        }
+        
+        .tagline {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+        
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .nav-tab {
+            padding: 10px 15px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+            font-size: 0.9rem;
+            text-align: center;
+            flex: 1;
+            min-width: 120px;
+        }
+        
+        .nav-tab.active {
+            border-bottom: 3px solid var(--accent);
+            color: var(--accent);
+        }
+        
+        .nav-tab:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 20px 0;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--secondary);
+            text-align: center;
+        }
+        
+        /* Cards Responsivos */
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+        
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        
+        .card.selected {
+            border: 2px solid var(--primary);
+            transform: translateY(-2px);
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 12px;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+        
+        .card-body {
+            padding: 15px;
+        }
+        
+        .price {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--primary);
+            text-align: center;
+            margin: 8px 0;
+        }
+        
+        .description {
+            color: #666;
+            text-align: center;
+            font-size: 0.85rem;
+        }
+        
+        /* Adicionais Responsivos */
+        .additional-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 12px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .additional-item:last-child {
+            border-bottom: none;
+        }
+        
+        .additional-info {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+        
+        .additional-name {
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+        
+        .additional-price {
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            margin-left: 10px;
+        }
+        
+        .checkbox {
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+        
+        /* Seções Responsivas */
+        .summary-section {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            padding-bottom: 8px;
+            border-bottom: 1px dashed #eee;
+            font-size: 0.95rem;
+        }
+        
+        .summary-total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 2px solid var(--primary);
+        }
+        
+        /* Botões Responsivos */
+        .btn {
+            display: inline-block;
+            padding: 12px 20px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            text-decoration: none;
+            width: 100%;
+        }
+        
+        .btn:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+        }
+        
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+        
+        .btn-whatsapp {
+            background: var(--success);
+        }
+        
+        .btn-whatsapp:hover {
+            background: #128C7E;
+            transform: translateY(-2px);
+        }
+        
+        .btn-whatsapp:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+            opacity: 0.6;
+        }
+        
+        .btn-whatsapp:disabled:hover {
+            background: #cccccc;
+            transform: none;
+        }
+        
+        /* Formulários Responsivos */
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(138, 43, 226, 0.2);
+        }
+        
+        .custom-additional {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        /* Alertas */
+        .alert {
+            padding: 12px 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+        }
+        
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .alert-info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        /* WhatsApp Flutuante */
+        .whatsapp-floating {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--success);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            cursor: pointer;
+            z-index: 1000;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+        
+        .whatsapp-floating:hover {
+            transform: scale(1.1);
+            background: #128C7E;
+        }
+        
+        /* Validação */
+        .validation-message {
+            color: var(--danger);
+            font-size: 0.85rem;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+            margin-top: 30px;
+            font-size: 0.9rem;
+        }
+        
+        /* Media Queries para Responsividade */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 10px;
+            }
+            
+            header {
+                padding: 10px 0;
+            }
+            
+            .logo {
+                width: 70px;
+                height: 70px;
+            }
+            
+            .logo-text {
+                font-size: 1.5rem;
+            }
+            
+            .tagline {
+                font-size: 0.9rem;
+            }
+            
+            .nav-tabs {
+                margin-top: 10px;
+            }
+            
+            .nav-tab {
+                padding: 8px 10px;
+                font-size: 0.85rem;
+                min-width: 100px;
+            }
+            
+            .section-title {
+                font-size: 1.3rem;
+                margin-bottom: 15px;
+            }
+            
+            .card-container {
+                grid-template-columns: 1fr;
+                gap: 10px;
+                margin-bottom: 20px;
+            }
+            
+            .card-header {
+                padding: 10px;
+                font-size: 1rem;
+            }
+            
+            .card-body {
+                padding: 12px;
+            }
+            
+            .price {
+                font-size: 1.2rem;
+            }
+            
+            .additional-item {
+                padding: 8px 10px;
+            }
+            
+            .summary-section {
+                padding: 12px;
+            }
+            
+            .btn {
+                padding: 10px 15px;
+                font-size: 0.95rem;
+            }
+            
+            .form-control {
+                padding: 10px 12px;
+            }
+            
+            .whatsapp-floating {
+                width: 45px;
+                height: 45px;
+                font-size: 1.3rem;
+                bottom: 15px;
+                right: 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .logo-text {
+                font-size: 1.3rem;
+            }
+            
+            .tagline {
+                font-size: 0.85rem;
+            }
+            
+            .nav-tab {
+                padding: 6px 8px;
+                font-size: 0.8rem;
+                min-width: 90px;
+            }
+            
+            .section-title {
+                font-size: 1.2rem;
+            }
+            
+            .card-header {
+                font-size: 0.95rem;
+            }
+            
+            .price {
+                font-size: 1.1rem;
+            }
+            
+            .description {
+                font-size: 0.8rem;
+            }
+            
+            .additional-name {
+                font-size: 0.9rem;
+            }
+            
+            .additional-price {
+                font-size: 0.85rem;
+            }
+            
+            .summary-item {
+                font-size: 0.9rem;
+            }
+            
+            .summary-total {
+                font-size: 1rem;
+            }
+            
+            .btn {
+                padding: 8px 12px;
+                font-size: 0.9rem;
+            }
+            
+            .form-label {
+                font-size: 0.9rem;
+            }
+            
+            .form-control {
+                padding: 8px 10px;
+                font-size: 0.95rem;
+            }
+            
+            .alert {
+                padding: 10px 12px;
+                font-size: 0.9rem;
+            }
+            
+            footer {
+                padding: 12px 0;
+                font-size: 0.85rem;
+            }
+        }
+        
+        @media (max-width: 360px) {
+            .nav-tab {
+                min-width: 80px;
+                font-size: 0.75rem;
+                padding: 5px 6px;
+            }
+            
+            .logo-text {
+                font-size: 1.2rem;
+            }
+            
+            .section-title {
+                font-size: 1.1rem;
+            }
+        }
+        
+        /* Melhorias para Touch */
+        @media (hover: none) {
+            .card:hover {
+                transform: none;
+            }
+            
+            .btn:hover {
+                transform: none;
+            }
+            
+            .whatsapp-floating:hover {
+                transform: none;
+            }
+        }
+        
+        /* Ajustes para orientação landscape em mobile */
+        @media (max-height: 500px) and (orientation: landscape) {
+            header {
+                position: relative;
+            }
+            
+            .logo-section {
+                margin-bottom: 10px;
+            }
+            
+            .logo {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .tab-content {
+                padding: 10px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo-section">
+                <div class="logo">
+                    <span style="font-size: 2rem; color: var(--primary);">🍇</span>
+                </div>
+                <h1 class="logo-text">Açaíteria Delícia</h1>
+                <p class="tagline">O melhor açaí da cidade!</p>
+            </div>
+            
+            <div class="nav-tabs">
+                <div class="nav-tab active" data-tab="pedido">Fazer Pedido</div>
+                <div class="nav-tab" data-tab="adicionais">Gerenciar Adicionais</div>
+                <div class="nav-tab" data-tab="sobre">Sobre</div>
+            </div>
+        </div>
+    </header>
+    
+    <main class="container">
+        <!-- Tab: Fazer Pedido -->
+        <div id="pedido" class="tab-content active">
+            <h2 class="section-title">Monte seu Açaí</h2>
+            
+            <div class="alert alert-success" id="success-message" style="display: none;">
+                ✅ Pedido realizado com sucesso! Em breve entraremos em contato via WhatsApp.
+            </div>
+            
+            <!-- Seleção de Tamanho -->
+            <h3 style="margin-bottom: 12px; color: var(--secondary); font-size: 1.2rem;">1. Escolha o Tamanho</h3>
+            <div class="card-container" id="tamanhos-container">
+                <!-- Tamanhos serão inseridos via JavaScript -->
+            </div>
+            
+            <!-- Seleção de Adicionais -->
+            <h3 style="margin-bottom: 12px; color: var(--secondary); font-size: 1.2rem;">2. Escolha os Adicionais</h3>
+            <div class="summary-section">
+                <div id="adicionais-container">
+                    <!-- Adicionais serão inseridos via JavaScript -->
+                </div>
+            </div>
+            
+            <!-- Dados do Cliente -->
+            <h3 style="margin-bottom: 12px; color: var(--secondary); font-size: 1.2rem;">3. Seus Dados</h3>
+            <div class="summary-section">
+                <div class="form-group">
+                    <label class="form-label" for="cliente-nome">Seu Nome *</label>
+                    <input type="text" class="form-control" id="cliente-nome" placeholder="Digite seu nome completo">
+                    <div class="validation-message" id="nome-validation">Por favor, digite seu nome</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="cliente-endereco">Endereço de Entrega *</label>
+                    <input type="text" class="form-control" id="cliente-endereco" placeholder="Rua, número, bairro, complemento">
+                    <div class="validation-message" id="endereco-validation">Por favor, digite o endereço de entrega</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="cliente-telefone">Telefone para Contato *</label>
+                    <input type="tel" class="form-control" id="cliente-telefone" placeholder="(98) 99999-9999">
+                    <div class="validation-message" id="telefone-validation">Por favor, digite seu telefone</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="cliente-observacoes">Observações do Pedido</label>
+                    <textarea class="form-control" id="cliente-observacoes" placeholder="Alguma observação especial? Ponto de referência?" rows="3"></textarea>
+                </div>
+            </div>
+            
+            <!-- Resumo do Pedido -->
+            <h3 style="margin-bottom: 12px; color: var(--secondary); font-size: 1.2rem;">4. Resumo do Pedido</h3>
+            <div class="summary-section">
+                <div id="resumo-pedido">
+                    <div class="summary-item">
+                        <span>Nenhum item selecionado</span>
+                        <span>R$ 0,00</span>
+                    </div>
+                </div>
+                <div class="summary-total">
+                    <span>Total:</span>
+                    <span id="total-pedido">R$ 0,00</span>
+                </div>
+            </div>
+            
+            <!-- Botão Finalizar -->
+            <button id="btn-finalizar" class="btn btn-block btn-whatsapp" disabled>
+                <span id="btn-text">📱 Finalizar Pedido via WhatsApp</span>
+                <span id="btn-loading" style="display: none;">⏳ Abrindo WhatsApp...</span>
+            </button>
+            
+            <!-- Mensagem de instrução -->
+            <div style="text-align: center; margin-top: 12px; color: #666; font-size: 0.85rem;">
+                💡 <strong>Preencha todos os campos acima</strong> para habilitar o botão
+            </div>
+        </div>
+        
+        <!-- Tab: Gerenciar Adicionais -->
+        <div id="adicionais" class="tab-content">
+            <h2 class="section-title">Gerenciar Adicionais</h2>
+            
+            <div class="custom-additional">
+                <h3 style="margin-bottom: 15px; color: var(--secondary); font-size: 1.2rem;">Adicionar Novo Adicional</h3>
+                
+                <div class="form-group">
+                    <label class="form-label" for="nome-adicional">Nome do Adicional</label>
+                    <input type="text" class="form-control" id="nome-adicional" placeholder="Ex: Granola, Morango, Leite Condensado...">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="preco-adicional">Preço (R$)</label>
+                    <input type="number" class="form-control" id="preco-adicional" placeholder="0.00" step="0.01" min="0">
+                </div>
+                
+                <button id="btn-adicionar" class="btn btn-block">➕ Adicionar à Lista</button>
+            </div>
+            
+            <h3 style="margin-bottom: 12px; color: var(--secondary); font-size: 1.2rem;">Adicionais Disponíveis</h3>
+            <div class="summary-section">
+                <div id="lista-adicionais">
+                    <!-- Lista de adicionais será inserida via JavaScript -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Tab: Sobre -->
+        <div id="sobre" class="tab-content">
+            <h2 class="section-title">Sobre a Açaíteria Delícia</h2>
+            
+            <div class="summary-section">
+                <p style="margin-bottom: 15px; line-height: 1.6;">
+                    Bem-vindo à Açaíteria Delícia! Somos especialistas em açaí natural e cremoso, 
+                    preparado com ingredientes selecionados para garantir a melhor qualidade e sabor.
+                </p>
+                
+                <h3 style="margin: 15px 0 8px; color: var(--secondary); font-size: 1.1rem;">Nossos Horários</h3>
+                <ul style="margin-bottom: 15px; padding-left: 20px;">
+                    <li style="margin-bottom: 6px;">Segunda a Sexta: 10h às 22h</li>
+                    <li style="margin-bottom: 6px;">Sábados: 10h às 23h</li>
+                    <li style="margin-bottom: 6px;">Domingos: 12h às 20h</li>
+                </ul>
+                
+                <h3 style="margin: 15px 0 8px; color: var(--secondary); font-size: 1.1rem;">Contato</h3>
+                <p style="margin-bottom: 6px;"><strong>Telefone/WhatsApp:</strong> <span id="contato-whatsapp">(98) 99881-0660</span></p>
+                <p style="margin-bottom: 6px;"><strong>Endereço:</strong> Rua das Açaíteras, 123 - Centro</p>
+                <p><strong>Instagram:</strong> @acaiteriadelicia</p>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Botão flutuante do WhatsApp -->
+    <a href="#" id="whatsapp-float" class="whatsapp-floating">
+        <span style="font-size: 1.5rem;">💬</span>
+    </a>
+    
+    <footer>
+        <div class="container">
+            <p>&copy; 2023 Açaíteria Delícia - Todos os direitos reservados</p>
+            <p id="footer-whatsapp" style="margin-top: 8px; opacity: 0.8;">WhatsApp: (98) 99881-0660</p>
+        </div>
+    </footer>
+
+    <script>
+        // =============================================
+        // CONFIGURAÇÃO DO WHATSAPP - ATIVADO E PRONTO!
+        // =============================================
+        
+        const WHATSAPP_NUMERO = "5598999810660"; // Número já integrado e ativado!
+        
+        // =============================================
+        // FIM DA CONFIGURAÇÃO
+        // =============================================
+        
+        // Dados iniciais
+        const tamanhos = [
+            { id: 1, nome: "Açaí Normal", descricao: "300ml - Ideal para um lanche rápido", preco: 10.00 },
+            { id: 2, nome: "Açaí Médio", descricao: "500ml - Perfeito para matar a fome", preco: 15.00 },
+            { id: 3, nome: "Açaí Grande", descricao: "700ml - Para os mais famintos", preco: 20.00 }
+        ];
+        
+        let adicionais = [
+            { id: 1, nome: "Granola", preco: 2.00 },
+            { id: 2, nome: "Leite Condensado", preco: 3.00 },
+            { id: 3, nome: "Morango", preco: 4.00 },
+            { id: 4, nome: "Banana", preco: 2.50 },
+            { id: 5, nome: "Paçoca", preco: 2.00 },
+            { id: 6, nome: "Nutella", preco: 5.00 }
+        ];
+        
+        // Estado do pedido
+        let pedido = {
+            tamanho: null,
+            adicionaisSelecionados: [],
+            total: 0,
+            cliente: {
+                nome: '',
+                endereco: '',
+                telefone: '',
+                observacoes: ''
+            }
+        };
+        
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Sistema Açaíteria Delícia Iniciado!');
+            console.log('📞 WhatsApp Integrado:', WHATSAPP_NUMERO);
+            
+            inicializarWhatsApp();
+            carregarAdicionais();
+            renderTamanhos();
+            renderAdicionais();
+            setupEventListeners();
+        });
+        
+        // Inicializar configuração do WhatsApp
+        function inicializarWhatsApp() {
+            // Formatar número para exibição
+            const numeroFormatado = formatarNumero(WHATSAPP_NUMERO);
+            
+            // Atualizar interface
+            document.getElementById('contato-whatsapp').textContent = numeroFormatado;
+            document.getElementById('footer-whatsapp').textContent = `WhatsApp: ${numeroFormatado}`;
+            
+            // Configurar botão flutuante
+            const floatBtn = document.getElementById('whatsapp-float');
+            floatBtn.href = `https://wa.me/${WHATSAPP_NUMERO}`;
+            floatBtn.target = '_blank';
+            
+            console.log('✅ WhatsApp configurado e ativado:', numeroFormatado);
+        }
+        
+        // Carregar adicionais salvos
+        function carregarAdicionais() {
+            const savedAdicionais = localStorage.getItem('acaiteria_adicionais');
+            if (savedAdicionais) {
+                adicionais = JSON.parse(savedAdicionais);
+            }
+        }
+        
+        // Salvar adicionais
+        function salvarAdicionais() {
+            localStorage.setItem('acaiteria_adicionais', JSON.stringify(adicionais));
+        }
+        
+        // Formatar número para exibição
+        function formatarNumero(numero) {
+            const numeroLimpo = numero.replace(/\D/g, '');
+            if (numeroLimpo.length === 13) {
+                return `+${numeroLimpo.slice(0, 2)} (${numeroLimpo.slice(2, 4)}) ${numeroLimpo.slice(4, 9)}-${numeroLimpo.slice(9)}`;
+            }
+            return numero;
+        }
+        
+        // Renderizar tamanhos
+        function renderTamanhos() {
+            const container = document.getElementById('tamanhos-container');
+            container.innerHTML = '';
+            
+            tamanhos.forEach(tamanho => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.dataset.id = tamanho.id;
+                
+                card.innerHTML = `
+                    <div class="card-header">${tamanho.nome}</div>
+                    <div class="card-body">
+                        <p class="description">${tamanho.descricao}</p>
+                        <div class="price">R$ ${tamanho.preco.toFixed(2)}</div>
+                    </div>
+                `;
+                
+                card.addEventListener('click', () => selecionarTamanho(tamanho.id));
+                container.appendChild(card);
+            });
+        }
+        
+        // Renderizar adicionais
+        function renderAdicionais() {
+            const container = document.getElementById('adicionais-container');
+            container.innerHTML = '';
+            
+            adicionais.forEach(adicional => {
+                const item = document.createElement('div');
+                item.className = 'additional-item';
+                
+                item.innerHTML = `
+                    <div class="additional-info">
+                        <span class="additional-name">${adicional.nome}</span>
+                        <span class="additional-price">+ R$ ${adicional.preco.toFixed(2)}</span>
+                    </div>
+                    <div class="checkbox-container">
+                        <input type="checkbox" class="checkbox" id="adicional-${adicional.id}" data-id="${adicional.id}">
+                    </div>
+                `;
+                
+                container.appendChild(item);
+            });
+            
+            // Adicionar event listeners aos checkboxes
+            document.querySelectorAll('.checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const id = parseInt(this.dataset.id);
+                    if (this.checked) {
+                        adicionarAdicional(id);
+                    } else {
+                        removerAdicional(id);
+                    }
+                });
+            });
+        }
+        
+        // Renderizar lista de adicionais para gerenciamento
+        function renderListaAdicionais() {
+            const container = document.getElementById('lista-adicionais');
+            container.innerHTML = '';
+            
+            if (adicionais.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #666;">Nenhum adicional cadastrado</p>';
+                return;
+            }
+            
+            adicionais.forEach(adicional => {
+                const item = document.createElement('div');
+                item.className = 'additional-item';
+                
+                item.innerHTML = `
+                    <div class="additional-info">
+                        <span class="additional-name">${adicional.nome}</span>
+                        <span class="additional-price">R$ ${adicional.preco.toFixed(2)}</span>
+                    </div>
+                    <button class="btn" data-id="${adicional.id}" style="padding: 5px 10px; font-size: 0.8rem;">🗑️ Remover</button>
+                `;
+                
+                container.appendChild(item);
+            });
+            
+            // Adicionar event listeners aos botões de remover
+            document.querySelectorAll('#lista-adicionais .btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = parseInt(this.dataset.id);
+                    removerAdicionalDaLista(id);
+                });
+            });
+        }
+        
+        // Selecionar tamanho
+        function selecionarTamanho(id) {
+            // Remover seleção anterior
+            document.querySelectorAll('#tamanhos-container .card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // Adicionar seleção atual
+            const card = document.querySelector(`#tamanhos-container .card[data-id="${id}"]`);
+            card.classList.add('selected');
+            
+            // Atualizar pedido
+            pedido.tamanho = tamanhos.find(t => t.id === id);
+            validarPedido();
+            atualizarResumo();
+        }
+        
+        // Adicionar adicional
+        function adicionarAdicional(id) {
+            const adicional = adicionais.find(a => a.id === id);
+            if (adicional && !pedido.adicionaisSelecionados.some(a => a.id === id)) {
+                pedido.adicionaisSelecionados.push(adicional);
+                validarPedido();
+                atualizarResumo();
+            }
+        }
+        
+        // Remover adicional
+        function removerAdicional(id) {
+            pedido.adicionaisSelecionados = pedido.adicionaisSelecionados.filter(a => a.id !== id);
+            validarPedido();
+            atualizarResumo();
+        }
+        
+        // Validar pedido
+        function validarPedido() {
+            const btnFinalizar = document.getElementById('btn-finalizar');
+            const temTamanho = pedido.tamanho !== null;
+            
+            const nome = document.getElementById('cliente-nome').value.trim();
+            const endereco = document.getElementById('cliente-endereco').value.trim();
+            const telefone = document.getElementById('cliente-telefone').value.trim();
+            
+            const dadosClientePreenchidos = (nome !== '' && endereco !== '' && telefone !== '');
+            
+            // Mostrar/ocultar mensagens de validação
+            document.getElementById('nome-validation').style.display = nome === '' ? 'block' : 'none';
+            document.getElementById('endereco-validation').style.display = endereco === '' ? 'block' : 'none';
+            document.getElementById('telefone-validation').style.display = telefone === '' ? 'block' : 'none';
+            
+            // Habilitar/desabilitar botão
+            const pedidoValido = temTamanho && dadosClientePreenchidos;
+            btnFinalizar.disabled = !pedidoValido;
+            
+            if (pedidoValido) {
+                console.log('✅ Pedido válido - Botão ATIVADO e CLICÁVEL');
+            } else {
+                console.log('❌ Pedido incompleto - Botão desativado');
+            }
+        }
+        
+        // Atualizar resumo do pedido
+        function atualizarResumo() {
+            const container = document.getElementById('resumo-pedido');
+            const totalElement = document.getElementById('total-pedido');
+            
+            // Calcular total
+            let total = 0;
+            let html = '';
+            
+            if (pedido.tamanho) {
+                total += pedido.tamanho.preco;
+                html += `
+                    <div class="summary-item">
+                        <span>${pedido.tamanho.nome}</span>
+                        <span>R$ ${pedido.tamanho.preco.toFixed(2)}</span>
+                    </div>
+                `;
+            }
+            
+            pedido.adicionaisSelecionados.forEach(adicional => {
+                total += adicional.preco;
+                html += `
+                    <div class="summary-item">
+                        <span>+ ${adicional.nome}</span>
+                        <span>R$ ${adicional.preco.toFixed(2)}</span>
+                    </div>
+                `;
+            });
+            
+            if (html === '') {
+                html = '<div class="summary-item"><span>Nenhum item selecionado</span><span>R$ 0,00</span></div>';
+            }
+            
+            container.innerHTML = html;
+            totalElement.textContent = `R$ ${total.toFixed(2)}`;
+            pedido.total = total;
+        }
+        
+        // Adicionar novo adicional
+        function adicionarNovoAdicional() {
+            const nomeInput = document.getElementById('nome-adicional');
+            const precoInput = document.getElementById('preco-adicional');
+            
+            const nome = nomeInput.value.trim();
+            const preco = parseFloat(precoInput.value);
+            
+            if (!nome || isNaN(preco) || preco <= 0) {
+                alert('Por favor, preencha todos os campos corretamente.');
+                return;
+            }
+            
+            // Gerar novo ID
+            const novoId = adicionais.length > 0 ? Math.max(...adicionais.map(a => a.id)) + 1 : 1;
+            
+            // Adicionar à lista
+            adicionais.push({
+                id: novoId,
+                nome: nome,
+                preco: preco
+            });
+            
+            // Limpar campos
+            nomeInput.value = '';
+            precoInput.value = '';
+            
+            // Salvar e atualizar interfaces
+            salvarAdicionais();
+            renderAdicionais();
+            renderListaAdicionais();
+            
+            alert('✅ Adicional adicionado com sucesso!');
+        }
+        
+        // Remover adicional da lista
+        function removerAdicionalDaLista(id) {
+            if (confirm('Tem certeza que deseja remover este adicional?')) {
+                adicionais = adicionais.filter(a => a.id !== id);
+                salvarAdicionais();
+                renderAdicionais();
+                renderListaAdicionais();
+                
+                // Se estava selecionado no pedido, remover também
+                removerAdicional(id);
+                const checkbox = document.getElementById(`adicional-${id}`);
+                if (checkbox) checkbox.checked = false;
+            }
+        }
+        
+        // Finalizar pedido - FUNÇÃO PRINCIPAL ATIVADA!
+        function finalizarPedido() {
+            console.log('🎯 Função finalizarPedido() executada!');
+            
+            if (!pedido.tamanho) {
+                alert('❌ Por favor, selecione um tamanho para o seu açaí.');
+                return;
+            }
+            
+            // Validar dados do cliente
+            const nome = document.getElementById('cliente-nome').value.trim();
+            const endereco = document.getElementById('cliente-endereco').value.trim();
+            const telefone = document.getElementById('cliente-telefone').value.trim();
+            const observacoes = document.getElementById('cliente-observacoes').value.trim();
+            
+            if (!nome || !endereco || !telefone) {
+                alert('❌ Por favor, preencha todos os dados obrigatórios (nome, endereço e telefone).');
+                return;
+            }
+            
+            // Atualizar dados do cliente no pedido
+            pedido.cliente = { nome, endereco, telefone, observacoes };
+            
+            // Mostrar loading no botão
+            document.getElementById('btn-text').style.display = 'none';
+            document.getElementById('btn-loading').style.display = 'inline';
+            
+            // Montar mensagem para WhatsApp
+            let mensagem = "🍇 *PEDIDO AÇAÍTERIA DELÍCIA* 🍇%0A%0A";
+            
+            // Dados do cliente
+            mensagem += "*👤 DADOS DO CLIENTE*%0A";
+            mensagem += `Nome: ${nome}%0A`;
+            mensagem += `Endereço: ${endereco}%0A`;
+            mensagem += `Telefone: ${telefone}%0A`;
+            if (observacoes) {
+                mensagem += `Observações: ${observacoes}%0A`;
+            }
+            mensagem += "%0A";
+            
+            // Detalhes do pedido
+            mensagem += "*📦 DETALHES DO PEDIDO*%0A";
+            mensagem += `Tamanho: ${pedido.tamanho.nome}%0A`;
+            mensagem += `Preço base: R$ ${pedido.tamanho.preco.toFixed(2)}%0A`;
+            
+            if (pedido.adicionaisSelecionados.length > 0) {
+                mensagem += "%0A*🍓 ADICIONAIS:*%0A";
+                pedido.adicionaisSelecionados.forEach(adicional => {
+                    mensagem += `• ${adicional.nome} - R$ ${adicional.preco.toFixed(2)}%0A`;
+                });
+            }
+            
+            mensagem += "%0A";
+            mensagem += `*💰 TOTAL: R$ ${pedido.total.toFixed(2)}*%0A%0A`;
+            mensagem += "🕒 *Pedido realizado via Site*%0A";
+            mensagem += "Por favor, confirme o pedido e informe o tempo de espera para entrega.";
+            mensagem += "%0A%0A_Obrigado!_ 🍇";
+            
+            // URL do WhatsApp
+            const url = `https://wa.me/${WHATSAPP_NUMERO}?text=${mensagem}`;
+            
+            console.log('📤 Enviando pedido para WhatsApp...');
+            console.log('🔗 URL:', url);
+            
+            // Abrir WhatsApp
+            window.open(url, '_blank');
+            
+            // Restaurar botão após 2 segundos
+            setTimeout(() => {
+                document.getElementById('btn-text').style.display = 'inline';
+                document.getElementById('btn-loading').style.display = 'none';
+            }, 2000);
+            
+            // Mostrar mensagem de sucesso
+            document.getElementById('success-message').style.display = 'block';
+            
+            // Rolagem para o topo para ver a mensagem
+            window.scrollTo(0, 0);
+            
+            // Resetar pedido após 8 segundos
+            setTimeout(() => {
+                resetarPedido();
+            }, 8000);
+        }
+        
+        // Resetar pedido
+        function resetarPedido() {
+            // Limpar seleções visuais
+            document.querySelectorAll('#tamanhos-container .card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            document.querySelectorAll('.checkbox').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            
+            // Limpar dados do cliente
+            document.getElementById('cliente-nome').value = '';
+            document.getElementById('cliente-endereco').value = '';
+            document.getElementById('cliente-telefone').value = '';
+            document.getElementById('cliente-observacoes').value = '';
+            
+            // Resetar estado do pedido
+            pedido = {
+                tamanho: null,
+                adicionaisSelecionados: [],
+                total: 0,
+                cliente: {
+                    nome: '',
+                    endereco: '',
+                    telefone: '',
+                    observacoes: ''
+                }
+            };
+            
+            // Atualizar resumo
+            atualizarResumo();
+            validarPedido();
+            
+            // Esconder mensagem de sucesso
+            document.getElementById('success-message').style.display = 'none';
+            
+            console.log('🔄 Pedido resetado - Pronto para novo pedido!');
+        }
+        
+        // Configurar event listeners
+        function setupEventListeners() {
+            // Navegação entre abas
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Remover classe active de todas as abas
+                    document.querySelectorAll('.nav-tab').forEach(t => {
+                        t.classList.remove('active');
+                    });
+                    
+                    document.querySelectorAll('.tab-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    
+                    // Adicionar classe active à aba clicada
+                    this.classList.add('active');
+                    document.getElementById(this.dataset.tab).classList.add('active');
+                    
+                    // Se for a aba de gerenciar adicionais, renderizar a lista
+                    if (this.dataset.tab === 'adicionais') {
+                        renderListaAdicionais();
+                    }
+                });
+            });
+            
+            // Botão adicionar novo adicional
+            document.getElementById('btn-adicionar').addEventListener('click', adicionarNovoAdicional);
+            
+            // Botão finalizar pedido - EVENT LISTENER PRINCIPAL!
+            document.getElementById('btn-finalizar').addEventListener('click', finalizarPedido);
+            
+            // Validar pedido quando dados do cliente mudarem
+            document.getElementById('cliente-nome').addEventListener('input', validarPedido);
+            document.getElementById('cliente-endereco').addEventListener('input', validarPedido);
+            document.getElementById('cliente-telefone').addEventListener('input', validarPedido);
+            
+            // Permitir adicionar com Enter nos campos de adicionais
+            document.getElementById('nome-adicional').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    adicionarNovoAdicional();
+                }
+            });
+            
+            document.getElementById('preco-adicional').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    adicionarNovoAdicional();
+                }
+            });
+            
+            console.log('🎯 Event listeners configurados - Sistema pronto!');
+        }
+    </script>
+</body>
+</html>
