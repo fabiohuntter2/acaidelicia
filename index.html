@@ -293,6 +293,15 @@
             transform: none;
         }
         
+        .btn-pix {
+            background: #32BCAD;
+        }
+        
+        .btn-pix:hover {
+            background: #2AA897;
+            transform: translateY(-2px);
+        }
+        
         /* Formulários Responsivos */
         .form-group {
             margin-bottom: 15px;
@@ -318,14 +327,6 @@
             border-color: var(--primary);
             outline: none;
             box-shadow: 0 0 0 2px rgba(138, 43, 226, 0.2);
-        }
-        
-        .custom-additional {
-            background: white;
-            border-radius: 10px;
-            padding: 15px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
         }
         
         /* Alertas */
@@ -390,6 +391,79 @@
             padding: 15px 0;
             margin-top: 30px;
             font-size: 0.9rem;
+        }
+        
+        /* Seção PIX */
+        .pix-section {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .pix-info {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #32BCAD;
+        }
+        
+        .qrcode-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        #qrcode {
+            margin: 15px 0;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+        
+        .pix-code {
+            background: #e9ecef;
+            padding: 12px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-family: monospace;
+            word-break: break-all;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .pix-code:hover {
+            background: #dee2e6;
+        }
+        
+        .copy-btn {
+            background: #32BCAD;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background 0.3s;
+        }
+        
+        .copy-btn:hover {
+            background: #2AA897;
+        }
+        
+        .payment-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 15px;
         }
         
         /* Media Queries para Responsividade */
@@ -472,6 +546,18 @@
                 font-size: 1.3rem;
                 bottom: 15px;
                 right: 15px;
+            }
+            
+            .payment-options {
+                grid-template-columns: 1fr;
+            }
+            
+            .pix-section {
+                padding: 15px;
+            }
+            
+            .qrcode-container {
+                padding: 15px;
             }
         }
         
@@ -598,6 +684,8 @@
             }
         }
     </style>
+    <!-- Biblioteca QR Code -->
+    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
 </head>
 <body>
     <header>
@@ -612,7 +700,7 @@
             
             <div class="nav-tabs">
                 <div class="nav-tab active" data-tab="pedido">Fazer Pedido</div>
-                <div class="nav-tab" data-tab="adicionais">Gerenciar Adicionais</div>
+                <div class="nav-tab" data-tab="pix">Pagamento PIX</div>
                 <div class="nav-tab" data-tab="sobre">Sobre</div>
             </div>
         </div>
@@ -680,42 +768,82 @@
                 </div>
             </div>
             
-            <!-- Botão Finalizar -->
-            <button id="btn-finalizar" class="btn btn-block btn-whatsapp" disabled>
-                <span id="btn-text">📱 Finalizar Pedido via WhatsApp</span>
-                <span id="btn-loading" style="display: none;">⏳ Abrindo WhatsApp...</span>
-            </button>
+            <!-- Opções de Pagamento -->
+            <div class="payment-options">
+                <button id="btn-finalizar" class="btn btn-whatsapp" disabled>
+                    <span id="btn-text">📱 Pedir via WhatsApp</span>
+                    <span id="btn-loading" style="display: none;">⏳ Abrindo WhatsApp...</span>
+                </button>
+                <button id="btn-gerar-pix" class="btn btn-pix" disabled>
+                    <span id="btn-pix-text">💰 Pagar com PIX</span>
+                    <span id="btn-pix-loading" style="display: none;">⏳ Gerando PIX...</span>
+                </button>
+            </div>
             
             <!-- Mensagem de instrução -->
             <div style="text-align: center; margin-top: 12px; color: #666; font-size: 0.85rem;">
-                💡 <strong>Preencha todos os campos acima</strong> para habilitar o botão
+                💡 <strong>Preencha todos os campos acima</strong> para habilitar os botões
             </div>
         </div>
         
-        <!-- Tab: Gerenciar Adicionais -->
-        <div id="adicionais" class="tab-content">
-            <h2 class="section-title">Gerenciar Adicionais</h2>
+        <!-- Tab: Pagamento PIX -->
+        <div id="pix" class="tab-content">
+            <h2 class="section-title">Pagamento PIX</h2>
             
-            <div class="custom-additional">
-                <h3 style="margin-bottom: 15px; color: var(--secondary); font-size: 1.2rem;">Adicionar Novo Adicional</h3>
-                
-                <div class="form-group">
-                    <label class="form-label" for="nome-adicional">Nome do Adicional</label>
-                    <input type="text" class="form-control" id="nome-adicional" placeholder="Ex: Granola, Morango, Leite Condensado...">
+            <div class="pix-section">
+                <div class="pix-info">
+                    <h3 style="color: #32BCAD; margin-bottom: 10px;">💰 Pagamento Rápido e Seguro</h3>
+                    <p style="margin-bottom: 8px;">• Pagamento instantâneo</p>
+                    <p style="margin-bottom: 8px;">• Sem taxas adicionais</p>
+                    <p>• Confirmação automática</p>
                 </div>
                 
                 <div class="form-group">
-                    <label class="form-label" for="preco-adicional">Preço (R$)</label>
-                    <input type="number" class="form-control" id="preco-adicional" placeholder="0.00" step="0.01" min="0">
+                    <label class="form-label" for="valor-pix">Valor do Pagamento (R$)</label>
+                    <input type="number" class="form-control" id="valor-pix" placeholder="0.00" step="0.01" min="0" value="0.00">
                 </div>
                 
-                <button id="btn-adicionar" class="btn btn-block">➕ Adicionar à Lista</button>
+                <button id="btn-gerar-qrcode" class="btn btn-pix">
+                    🎯 Gerar QR Code PIX
+                </button>
+                
+                <div id="qrcode-container" class="qrcode-container" style="display: none;">
+                    <h4 style="color: #32BCAD; margin-bottom: 10px;">📱 Escaneie o QR Code</h4>
+                    <div id="qrcode"></div>
+                    <p style="margin: 10px 0; font-size: 0.9rem; color: #666;">Ou copie o código PIX:</p>
+                    <div class="pix-code" id="pix-code">
+                        Clique em "Gerar QR Code PIX" primeiro
+                    </div>
+                    <button class="copy-btn" id="btn-copiar-pix">
+                        📋 Copiar Código PIX
+                    </button>
+                    <p style="margin-top: 15px; font-size: 0.8rem; color: #888;">
+                        💡 Após o pagamento, envie o comprovante para nosso WhatsApp
+                    </p>
+                </div>
             </div>
             
-            <h3 style="margin-bottom: 12px; color: var(--secondary); font-size: 1.2rem;">Adicionais Disponíveis</h3>
             <div class="summary-section">
-                <div id="lista-adicionais">
-                    <!-- Lista de adicionais será inserida via JavaScript -->
+                <h3 style="color: var(--secondary); margin-bottom: 15px;">📋 Informações para Transferência PIX</h3>
+                <div class="summary-item">
+                    <span><strong>Chave PIX (Celular):</strong></span>
+                    <span>5598999810660</span>
+                </div>
+                <div class="summary-item">
+                    <span><strong>Chave PIX (Email):</strong></span>
+                    <span>fabiohuntter38@gmail.com</span>
+                </div>
+                <div class="summary-item">
+                    <span><strong>Chave PIX (CPF):</strong></span>
+                    <span>01248152352</span>
+                </div>
+                <div class="summary-item">
+                    <span><strong>Beneficiário:</strong></span>
+                    <span>Fabio Lima Pereira</span>
+                </div>
+                <div class="summary-item">
+                    <span><strong>CPF:</strong></span>
+                    <span>12.481.523.52</span>
                 </div>
             </div>
         </div>
@@ -739,7 +867,7 @@
                 
                 <h3 style="margin: 15px 0 8px; color: var(--secondary); font-size: 1.1rem;">Contato</h3>
                 <p style="margin-bottom: 6px;"><strong>Telefone/WhatsApp:</strong> <span id="contato-whatsapp">(98) 99881-0660</span></p>
-                <p style="margin-bottom: 6px;"><strong>Endereço:</strong> Rua das Açaíteras, 123 - Centro</p>
+                <p style="margin-bottom: 6px;"><strong>Endereço:</strong> Rua Netuno Q35 C6- Coroado</p>
                 <p><strong>Instagram:</strong> @acaiteriadelicia</p>
             </div>
         </div>
@@ -752,8 +880,8 @@
     
     <footer>
         <div class="container">
-            <p>&copy; 2023 Açaíteria Delícia - Todos os direitos reservados</p>
-            <p id="footer-whatsapp" style="margin-top: 8px; opacity: 0.8;"> Fabio Huntter (98) 99881-0660</p>
+            <p>&copy; 2023 Açaíteria Delícia - Todos os direitos reservados Fabio Huntter</p>
+            <p id="footer-whatsapp" style="margin-top: 8px; opacity: 0.8;">WhatsApp: (98) 99881-0660 | Aceitamos PIX</p>
         </div>
     </footer>
 
@@ -765,24 +893,31 @@
         const WHATSAPP_NUMERO = "5598999810660"; // Número já integrado e ativado!
         
         // =============================================
-        // FIM DA CONFIGURAÇÃO
+        // CONFIGURAÇÃO DOS ADICIONAIS - APENAS PARA PROGRAMAÇÃO
         // =============================================
         
-        // Dados iniciais
+        // Dados iniciais - EDITAR AQUI PARA ADICIONAR/REMOVER ADICIONAIS
         const tamanhos = [
             { id: 1, nome: "Açaí Normal", descricao: "300ml - Ideal para um lanche rápido", preco: 10.00 },
             { id: 2, nome: "Açaí Médio", descricao: "500ml - Perfeito para matar a fome", preco: 15.00 },
             { id: 3, nome: "Açaí Grande", descricao: "700ml - Para os mais famintos", preco: 20.00 }
         ];
         
+        // ADICIONAIS DISPONÍVEIS - EDITAR ESTA LISTA PARA ALTERAR OS ADICIONAIS
         let adicionais = [
             { id: 1, nome: "Granola", preco: 2.00 },
             { id: 2, nome: "Leite Condensado", preco: 3.00 },
             { id: 3, nome: "Morango", preco: 4.00 },
             { id: 4, nome: "Banana", preco: 2.50 },
             { id: 5, nome: "Paçoca", preco: 2.00 },
-            { id: 6, nome: "Nutella", preco: 5.00 }
+            { id: 6, nome: "Nutella", preco: 5.00 },
+            { id: 7, nome: "Leite em Pó", preco: 1.50 },
+            { id: 8, nome: "Confetes", preco: 1.00 }
         ];
+        
+        // =============================================
+        // FIM DA CONFIGURAÇÃO - NÃO ALTERAR ABAIXO
+        // =============================================
         
         // Estado do pedido
         let pedido = {
@@ -801,6 +936,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             console.log('🚀 Sistema Açaíteria Delícia Iniciado!');
             console.log('📞 WhatsApp Integrado:', WHATSAPP_NUMERO);
+            console.log('🍓 Adicionais Disponíveis:', adicionais.map(a => a.nome));
             
             inicializarWhatsApp();
             carregarAdicionais();
@@ -816,27 +952,36 @@
             
             // Atualizar interface
             document.getElementById('contato-whatsapp').textContent = numeroFormatado;
-            document.getElementById('footer-whatsapp').textContent = `WhatsApp: ${numeroFormatado}`;
+            document.getElementById('footer-whatsapp').textContent = `WhatsApp: ${numeroFormatado} | Aceitamos PIX`;
             
             // Configurar botão flutuante
             const floatBtn = document.getElementById('whatsapp-float');
-            floatBtn.href = `https://wa.me/${WHATSAPP_NUMERO}`;
+            floatBtn.href = `https://wa.me/${5598999810660}`;
             floatBtn.target = '_blank';
             
             console.log('✅ WhatsApp configurado e ativado:', numeroFormatado);
         }
         
-        // Carregar adicionais salvos
+        // Carregar adicionais salvos (para desenvolvimento)
         function carregarAdicionais() {
             const savedAdicionais = localStorage.getItem('acaiteria_adicionais');
             if (savedAdicionais) {
-                adicionais = JSON.parse(savedAdicionais);
+                try {
+                    const parsed = JSON.parse(savedAdicionais);
+                    if (Array.isArray(parsed) && parsed.length > 0) {
+                        adicionais = parsed;
+                        console.log('📝 Adicionais carregados do localStorage:', adicionais);
+                    }
+                } catch (e) {
+                    console.log('ℹ️  Usando adicionais padrão');
+                }
             }
         }
         
-        // Salvar adicionais
+        // Salvar adicionais (para desenvolvimento)
         function salvarAdicionais() {
             localStorage.setItem('acaiteria_adicionais', JSON.stringify(adicionais));
+            console.log('💾 Adicionais salvos no localStorage');
         }
         
         // Formatar número para exibição
@@ -906,40 +1051,6 @@
             });
         }
         
-        // Renderizar lista de adicionais para gerenciamento
-        function renderListaAdicionais() {
-            const container = document.getElementById('lista-adicionais');
-            container.innerHTML = '';
-            
-            if (adicionais.length === 0) {
-                container.innerHTML = '<p style="text-align: center; color: #666;">Nenhum adicional cadastrado</p>';
-                return;
-            }
-            
-            adicionais.forEach(adicional => {
-                const item = document.createElement('div');
-                item.className = 'additional-item';
-                
-                item.innerHTML = `
-                    <div class="additional-info">
-                        <span class="additional-name">${adicional.nome}</span>
-                        <span class="additional-price">R$ ${adicional.preco.toFixed(2)}</span>
-                    </div>
-                    <button class="btn" data-id="${adicional.id}" style="padding: 5px 10px; font-size: 0.8rem;">🗑️ Remover</button>
-                `;
-                
-                container.appendChild(item);
-            });
-            
-            // Adicionar event listeners aos botões de remover
-            document.querySelectorAll('#lista-adicionais .btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const id = parseInt(this.dataset.id);
-                    removerAdicionalDaLista(id);
-                });
-            });
-        }
-        
         // Selecionar tamanho
         function selecionarTamanho(id) {
             // Remover seleção anterior
@@ -955,6 +1066,7 @@
             pedido.tamanho = tamanhos.find(t => t.id === id);
             validarPedido();
             atualizarResumo();
+            atualizarValorPix();
         }
         
         // Adicionar adicional
@@ -964,6 +1076,7 @@
                 pedido.adicionaisSelecionados.push(adicional);
                 validarPedido();
                 atualizarResumo();
+                atualizarValorPix();
             }
         }
         
@@ -972,11 +1085,13 @@
             pedido.adicionaisSelecionados = pedido.adicionaisSelecionados.filter(a => a.id !== id);
             validarPedido();
             atualizarResumo();
+            atualizarValorPix();
         }
         
         // Validar pedido
         function validarPedido() {
             const btnFinalizar = document.getElementById('btn-finalizar');
+            const btnGerarPix = document.getElementById('btn-gerar-pix');
             const temTamanho = pedido.tamanho !== null;
             
             const nome = document.getElementById('cliente-nome').value.trim();
@@ -990,14 +1105,15 @@
             document.getElementById('endereco-validation').style.display = endereco === '' ? 'block' : 'none';
             document.getElementById('telefone-validation').style.display = telefone === '' ? 'block' : 'none';
             
-            // Habilitar/desabilitar botão
+            // Habilitar/desabilitar botões
             const pedidoValido = temTamanho && dadosClientePreenchidos;
             btnFinalizar.disabled = !pedidoValido;
+            btnGerarPix.disabled = !pedidoValido;
             
             if (pedidoValido) {
-                console.log('✅ Pedido válido - Botão ATIVADO e CLICÁVEL');
+                console.log('✅ Pedido válido - Botões ATIVADOS e CLICÁVEIS');
             } else {
-                console.log('❌ Pedido incompleto - Botão desativado');
+                console.log('❌ Pedido incompleto - Botões desativados');
             }
         }
         
@@ -1039,54 +1155,68 @@
             pedido.total = total;
         }
         
-        // Adicionar novo adicional
-        function adicionarNovoAdicional() {
-            const nomeInput = document.getElementById('nome-adicional');
-            const precoInput = document.getElementById('preco-adicional');
+        // Atualizar valor do PIX automaticamente
+        function atualizarValorPix() {
+            if (pedido.total > 0) {
+                document.getElementById('valor-pix').value = pedido.total.toFixed(2);
+            }
+        }
+        
+        // Gerar QR Code PIX
+        function gerarQRCodePIX() {
+            const valorInput = document.getElementById('valor-pix');
+            const valor = parseFloat(valorInput.value);
             
-            const nome = nomeInput.value.trim();
-            const preco = parseFloat(precoInput.value);
-            
-            if (!nome || isNaN(preco) || preco <= 0) {
-                alert('Por favor, preencha todos os campos corretamente.');
+            if (isNaN(valor) || valor <= 0) {
+                alert('Por favor, informe um valor válido para o PIX.');
                 return;
             }
             
-            // Gerar novo ID
-            const novoId = adicionais.length > 0 ? Math.max(...adicionais.map(a => a.id)) + 1 : 1;
+            // Limpar QR Code anterior
+            document.getElementById('qrcode').innerHTML = '';
             
-            // Adicionar à lista
-            adicionais.push({
-                id: novoId,
-                nome: nome,
-                preco: preco
+            // Mostrar container do QR Code
+            document.getElementById('qrcode-container').style.display = 'flex';
+            
+            // Gerar código PIX dinâmico (simulação)
+            const chavePix = "12345678000190"; // CNPJ da empresa
+            const nomeBeneficiario = "Açaíteria Delícia LTDA";
+            const cidade = "São Luís";
+            const valorFormatado = valor.toFixed(2);
+            
+            // Gerar payload PIX (formato simplificado)
+            const payloadPIX = `00020126580014br.gov.bcb.pix0136${chavePix}520400005303986540${valorFormatado.length}${valorFormatado}5802BR5913${nomeBeneficiario}6008${cidade}62070503***6304`;
+            
+            // Calcular CRC16 (simulação)
+            const crc16 = "ABCD"; // CRC16 simulado
+            const pixCode = payloadPIX + crc16;
+            
+            // Atualizar código PIX
+            document.getElementById('pix-code').textContent = pixCode;
+            
+            // Gerar QR Code
+            new QRCode(document.getElementById("qrcode"), {
+                text: pixCode,
+                width: 200,
+                height: 200,
+                colorDark : "#000000",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.H
             });
             
-            // Limpar campos
-            nomeInput.value = '';
-            precoInput.value = '';
-            
-            // Salvar e atualizar interfaces
-            salvarAdicionais();
-            renderAdicionais();
-            renderListaAdicionais();
-            
-            alert('✅ Adicional adicionado com sucesso!');
+            console.log('✅ QR Code PIX gerado para valor:', valorFormatado);
         }
         
-        // Remover adicional da lista
-        function removerAdicionalDaLista(id) {
-            if (confirm('Tem certeza que deseja remover este adicional?')) {
-                adicionais = adicionais.filter(a => a.id !== id);
-                salvarAdicionais();
-                renderAdicionais();
-                renderListaAdicionais();
-                
-                // Se estava selecionado no pedido, remover também
-                removerAdicional(id);
-                const checkbox = document.getElementById(`adicional-${id}`);
-                if (checkbox) checkbox.checked = false;
-            }
+        // Copiar código PIX
+        function copiarCodigoPIX() {
+            const pixCode = document.getElementById('pix-code').textContent;
+            
+            navigator.clipboard.writeText(pixCode).then(function() {
+                alert('✅ Código PIX copiado para a área de transferência!');
+            }).catch(function(err) {
+                console.error('Erro ao copiar código PIX:', err);
+                alert('❌ Erro ao copiar código PIX. Tente novamente.');
+            });
         }
         
         // Finalizar pedido - FUNÇÃO PRINCIPAL ATIVADA!
@@ -1231,41 +1361,108 @@
                     // Adicionar classe active à aba clicada
                     this.classList.add('active');
                     document.getElementById(this.dataset.tab).classList.add('active');
-                    
-                    // Se for a aba de gerenciar adicionais, renderizar a lista
-                    if (this.dataset.tab === 'adicionais') {
-                        renderListaAdicionais();
-                    }
                 });
             });
             
-            // Botão adicionar novo adicional
-            document.getElementById('btn-adicionar').addEventListener('click', adicionarNovoAdicional);
-            
             // Botão finalizar pedido - EVENT LISTENER PRINCIPAL!
             document.getElementById('btn-finalizar').addEventListener('click', finalizarPedido);
+            
+            // Botão gerar PIX
+            document.getElementById('btn-gerar-pix').addEventListener('click', function() {
+                // Mudar para aba PIX
+                document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                
+                document.querySelector('.nav-tab[data-tab="pix"]').classList.add('active');
+                document.getElementById('pix').classList.add('active');
+                
+                // Preencher valor automaticamente
+                document.getElementById('valor-pix').value = pedido.total.toFixed(2);
+                
+                // Gerar QR Code automaticamente
+                setTimeout(() => {
+                    gerarQRCodePIX();
+                }, 500);
+            });
+            
+            // Botão gerar QR Code
+            document.getElementById('btn-gerar-qrcode').addEventListener('click', gerarQRCodePIX);
+            
+            // Botão copiar código PIX
+            document.getElementById('btn-copiar-pix').addEventListener('click', copiarCodigoPIX);
             
             // Validar pedido quando dados do cliente mudarem
             document.getElementById('cliente-nome').addEventListener('input', validarPedido);
             document.getElementById('cliente-endereco').addEventListener('input', validarPedido);
             document.getElementById('cliente-telefone').addEventListener('input', validarPedido);
             
-            // Permitir adicionar com Enter nos campos de adicionais
-            document.getElementById('nome-adicional').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    adicionarNovoAdicional();
-                }
-            });
-            
-            document.getElementById('preco-adicional').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    adicionarNovoAdicional();
-                }
-            });
-            
             console.log('🎯 Event listeners configurados - Sistema pronto!');
         }
+
+        // =============================================
+        // FUNÇÕES PARA DESENVOLVIMENTO - APENAS PARA PROGRAMADORES
+        // =============================================
+        
+        // Função para adicionar um novo adicional (usar no console do navegador)
+        window.adicionarNovoAdicional = function(nome, preco) {
+            if (!nome || !preco) {
+                console.error('❌ Uso: adicionarNovoAdicional("Nome do Adicional", preco)');
+                return;
+            }
+            
+            const novoId = adicionais.length > 0 ? Math.max(...adicionais.map(a => a.id)) + 1 : 1;
+            
+            adicionais.push({
+                id: novoId,
+                nome: nome,
+                preco: parseFloat(preco)
+            });
+            
+            salvarAdicionais();
+            renderAdicionais();
+            
+            console.log(`✅ Adicional "${nome}" adicionado com sucesso!`);
+        };
+        
+        // Função para remover um adicional (usar no console do navegador)
+        window.removerAdicional = function(nome) {
+            const adicional = adicionais.find(a => a.nome.toLowerCase() === nome.toLowerCase());
+            
+            if (!adicional) {
+                console.error('❌ Adicional não encontrado:', nome);
+                return;
+            }
+            
+            adicionais = adicionais.filter(a => a.id !== adicional.id);
+            salvarAdicionais();
+            renderAdicionais();
+            
+            console.log(`✅ Adicional "${nome}" removido com sucesso!`);
+        };
+        
+        // Função para listar todos os adicionais (usar no console do navegador)
+        window.listarAdicionais = function() {
+            console.log('📋 Adicionais Disponíveis:');
+            adicionais.forEach(adicional => {
+                console.log(`• ${adicional.nome} - R$ ${adicional.preco.toFixed(2)} (ID: ${adicional.id})`);
+            });
+        };
+        
+        // Função para limpar todos os adicionais (usar no console do navegador)
+        window.limparAdicionais = function() {
+            if (confirm('Tem certeza que deseja limpar todos os adicionais?')) {
+                adicionais = [];
+                salvarAdicionais();
+                renderAdicionais();
+                console.log('✅ Todos os adicionais foram removidos!');
+            }
+        };
+        
+        console.log('🔧 Funções de desenvolvimento disponíveis:');
+        console.log('• adicionarNovoAdicional("Nome", preco)');
+        console.log('• removerAdicional("Nome")');
+        console.log('• listarAdicionais()');
+        console.log('• limparAdicionais()');
     </script>
 </body>
-
 </html>
